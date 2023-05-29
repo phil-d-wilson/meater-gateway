@@ -1,0 +1,28 @@
+# Start with an image that has a compatible architecture
+FROM balenalib/raspberrypi3-64-python:3.9-buster-run
+
+WORKDIR /app
+
+# Install the necessary packages
+RUN apt-get update && apt-get install -y \
+    bluez \
+    libglib2.0-dev \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
+
+# Upgrade pip
+RUN pip3 install --upgrade pip
+
+# Install python dependencies
+RUN pip3 install bluepy wheel
+
+COPY . .
+
+RUN ls -l
+
+RUN chmod +x *.sh
+
+RUN setcap cap_net_raw+eip $(eval readlink -f `which python`)
+
+# Run the script on container startup
+CMD ["./run.sh"]

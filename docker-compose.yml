@@ -1,0 +1,7 @@
+version: "2"
+
+services:
+  meater:
+    build: ./meater
+    network_mode: host
+    privileged: true
